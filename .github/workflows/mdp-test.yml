@@ -1,0 +1,136 @@
+# Test workflow to generate telemetry events with varying durations
+# This workflow is designed to test the telemetry capture system
+name: mdp-test-telemetry
+run-name: mdp-test-telemetry-${{ github.run_id }}-${{ github.run_number }}-${{ github.run_attempt }}
+on:
+  pull_request:
+  merge_group:
+  workflow_dispatch:
+    inputs:
+      duration_seconds:
+        description: "Duration to sleep (in seconds)"
+        required: false
+        default: "10"
+
+jobs:
+  quick-job:
+    runs-on: [self-hosted, "ManagedDevOps.Pool=${{ vars.MDP_POOL }}", "JobId=quick-job-${{ github.run_id }}-${{ github.run_number }}-${{ github.run_attempt }}"]
+    name: Quick Job (~5s)
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Quick step
+        run: |
+          echo "Starting quick job..."
+          sleep 2
+          echo "Quick job completed!"
+
+  medium-job:
+    runs-on: [self-hosted, "ManagedDevOps.Pool=${{ vars.MDP_POOL }}", "JobId=medium-job-${{ github.run_id }}-${{ github.run_number }}-${{ github.run_attempt }}"]
+    name: Medium Job (~30s)
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup step
+        run: |
+          echo "Setting up..."
+          sleep 5
+
+      - name: Processing step
+        run: |
+          echo "Processing..."
+          sleep 15
+
+      - name: Cleanup step
+        run: |
+          echo "Cleaning up..."
+          sleep 5
+          echo "Medium job completed!"
+
+  long-job:
+    runs-on: [self-hosted, "ManagedDevOps.Pool=${{ vars.MDP_POOL }}", "JobId=long-job-${{ github.run_id }}-${{ github.run_number }}-${{ github.run_attempt }}"]
+    name: Long Job (~60s)
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Initialize
+        run: |
+          echo "Initializing long job..."
+          sleep 10
+
+      - name: Build phase
+        run: |
+          echo "Building..."
+          sleep 20
+
+      - name: Test phase
+        run: |
+          echo "Testing..."
+          sleep 20
+
+      - name: Deploy phase
+        run: |
+          echo "Deploying..."
+          sleep 5
+          echo "Long job completed!"
+
+  custom-duration:
+    runs-on: [self-hosted, "ManagedDevOps.Pool=${{ vars.MDP_POOL }}", "JobId=custom-job-${{ github.run_id }}-${{ github.run_number }}-${{ github.run_attempt }}"]
+    name: Custom Duration Job
+    if: github.event_name == 'workflow_dispatch'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Run for custom duration
+        run: |
+          echo "Running for ${{ github.event.inputs.duration_seconds }} seconds..."
+          sleep ${{ github.event.inputs.duration_seconds }}
+          echo "Custom duration job completed!"
+
+  parallel-jobs:
+    runs-on: [self-hosted, "ManagedDevOps.Pool=${{ vars.MDP_POOL }}", "JobId=parallel-job-${{ github.run_id }}-${{ github.run_number }}-${{ github.run_attempt }}"]
+    name: Parallel Job
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Run parallel task
+        run: |
+          echo "Running parallel job..."
+          sleep 5
+          echo "Parallel job completed!"
+
+  skipped-job:
+    runs-on: [self-hosted, "ManagedDevOps.Pool=${{ vars.MDP_POOL }}", "JobId=skipped-job-${{ github.run_id }}-${{ github.run_number }}-${{ github.run_attempt }}"]
+    name: Skipped Job
+    if: false
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: This will never run
+        run: |
+          echo "This step will never execute"
+
+  summary:
+    runs-on: [self-hosted, "ManagedDevOps.Pool=${{ vars.MDP_POOL }}", "JobId=summary-job-${{ github.run_id }}-${{ github.run_number }}-${{ github.run_attempt }}"]
+    name: Summary
+    needs: [quick-job, medium-job, long-job, parallel-jobs]
+    steps:
+      - name: Generate summary
+        run: |
+          echo "## Telemetry Test Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "All duration test jobs completed successfully!" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Job | Expected Duration |" >> $GITHUB_STEP_SUMMARY
+          echo "|-----|-------------------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Quick Job | ~5s |" >> $GITHUB_STEP_SUMMARY
+          echo "| Medium Job | ~30s |" >> $GITHUB_STEP_SUMMARY
+          echo "| Long Job | ~60s |" >> $GITHUB_STEP_SUMMARY
+          echo "| Parallel Jobs | 5-15s each |" >> $GITHUB_STEP_SUMMARY
+          echo "| Skipped Job | N/A (always skipped) |" >> $GITHUB_STEP_SUMMARY

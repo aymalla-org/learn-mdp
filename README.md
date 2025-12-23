@@ -1,2 +1,3 @@
-# learn-mdp
-Repository for GitHub Actions self-hosted runners using Azure Managed Devops Pools
+# Azure Managed DevOps Pools (MDP)
+
+This repository contains scripts and configurations for setting up and managing Azure Managed DevOps Pools (MDP) environments to be used as GitHub Self-Hosted Runners.

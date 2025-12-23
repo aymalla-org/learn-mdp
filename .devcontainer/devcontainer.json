@@ -1,0 +1,39 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the
+// README at: https://github.com/devcontainers/templates/tree/main/src/typescript-node
+{
+	"name": "Azure MDP Dev Environment",
+	"image": "mcr.microsoft.com/devcontainers/python:3.13",
+	"features": {
+        
+        "ghcr.io/devcontainers/features/docker-in-docker": {},
+        "ghcr.io/devcontainers/features/azure-cli": {},
+        "ghcr.io/azure/azure-dev/azd": {},
+		"ghcr.io/devcontainers/features/github-cli": {}
+	},
+	"containerEnv": {
+		"AZURE_TOKEN_CREDENTIALS": "dev", // avoid using dev VM managed identity when running locally: https://learn.microsoft.com/en-us/dotnet/azure/sdk/authentication/credential-chains?tabs=dac#exclude-a-credential-type-category
+		"AZCOPY_AUTO_LOGIN_TYPE": "AZCLI", // use Azure CLI login for azcopy auth
+		"AZURE_STORAGE_AUTH_MODE": "login" // use Entra ID auth for Azure Storage
+	},
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"dbaeumer.vscode-eslint",
+				"esbenp.prettier-vscode",
+				"github.vscode-github-actions",
+				"github.vscode-pull-request-github",
+				"humao.rest-client",
+				"ms-azuretools.vscode-bicep",
+				"ms-vscode.makefile-tools",
+				"ms-python.debugpy",
+				"vitest.explorer"
+			]
+		}
+	},
+	// Use 'forwardPorts' to make a list of ports inside the container available locally.
+	// "forwardPorts": [],
+	// Use 'postCreateCommand' to run commands after the container is created.
+	// "postCreateCommand": ".devcontainer/init-devcontainer.sh"
+	// Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
+	// "remoteUser": "root"
+}
