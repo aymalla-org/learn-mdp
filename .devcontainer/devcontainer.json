@@ -9,8 +9,7 @@
 		},
 		"ghcr.io/devcontainers/features/azure-cli": {},
 		"ghcr.io/azure/azure-dev/azd": {},
-		"ghcr.io/devcontainers/features/github-cli": {},
-		"ghcr.io/devcontainers/features/bicep": {}
+		"ghcr.io/devcontainers/features/github-cli": {}
 	},
 	"containerEnv": {
 		"AZURE_TOKEN_CREDENTIALS": "dev", // avoid using dev VM managed identity when running locally: https://learn.microsoft.com/en-us/dotnet/azure/sdk/authentication/credential-chains?tabs=dac#exclude-a-credential-type-category
