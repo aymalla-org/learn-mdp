@@ -14,7 +14,7 @@ on:
 
 jobs:
   quick-job:
-    runs-on: [self-hosted, "ManagedDevOps.Pool=${{ vars.MDP_POOL }}", "JobId=quick-job-${{ github.run_id }}-${{ github.run_number }}-${{ github.run_attempt }}"]
+    runs-on: [self-hosted, "ManagedDevOps.Pool=${{ vars.MDP_POOL_NAME }}", "JobId=quick-job-${{ github.run_id }}-${{ github.run_number }}-${{ github.run_attempt }}"]
     name: Quick Job (~5s)
     steps:
       - name: Checkout
@@ -27,7 +27,7 @@ jobs:
           echo "Quick job completed!"
 
   medium-job:
-    runs-on: [self-hosted, "ManagedDevOps.Pool=${{ vars.MDP_POOL }}", "JobId=medium-job-${{ github.run_id }}-${{ github.run_number }}-${{ github.run_attempt }}"]
+    runs-on: [self-hosted, "ManagedDevOps.Pool=${{ vars.MDP_POOL_NAME }}", "JobId=medium-job-${{ github.run_id }}-${{ github.run_number }}-${{ github.run_attempt }}"]
     name: Medium Job (~30s)
     steps:
       - name: Checkout
@@ -50,7 +50,7 @@ jobs:
           echo "Medium job completed!"
 
   long-job:
-    runs-on: [self-hosted, "ManagedDevOps.Pool=${{ vars.MDP_POOL }}", "JobId=long-job-${{ github.run_id }}-${{ github.run_number }}-${{ github.run_attempt }}"]
+    runs-on: [self-hosted, "ManagedDevOps.Pool=${{ vars.MDP_POOL_NAME }}", "JobId=long-job-${{ github.run_id }}-${{ github.run_number }}-${{ github.run_attempt }}"]
     name: Long Job (~60s)
     steps:
       - name: Checkout
@@ -78,7 +78,7 @@ jobs:
           echo "Long job completed!"
 
   custom-duration:
-    runs-on: [self-hosted, "ManagedDevOps.Pool=${{ vars.MDP_POOL }}", "JobId=custom-job-${{ github.run_id }}-${{ github.run_number }}-${{ github.run_attempt }}"]
+    runs-on: [self-hosted, "ManagedDevOps.Pool=${{ vars.MDP_POOL_NAME }}", "JobId=custom-job-${{ github.run_id }}-${{ github.run_number }}-${{ github.run_attempt }}"]
     name: Custom Duration Job
     if: github.event_name == 'workflow_dispatch'
     steps:
@@ -92,7 +92,7 @@ jobs:
           echo "Custom duration job completed!"
 
   parallel-jobs:
-    runs-on: [self-hosted, "ManagedDevOps.Pool=${{ vars.MDP_POOL }}", "JobId=parallel-job-${{ github.run_id }}-${{ github.run_number }}-${{ github.run_attempt }}"]
+    runs-on: [self-hosted, "ManagedDevOps.Pool=${{ vars.MDP_POOL_NAME }}", "JobId=parallel-job-${{ github.run_id }}-${{ github.run_number }}-${{ github.run_attempt }}"]
     name: Parallel Job
     steps:
       - name: Checkout
@@ -105,7 +105,7 @@ jobs:
           echo "Parallel job completed!"
 
   skipped-job:
-    runs-on: [self-hosted, "ManagedDevOps.Pool=${{ vars.MDP_POOL }}", "JobId=skipped-job-${{ github.run_id }}-${{ github.run_number }}-${{ github.run_attempt }}"]
+    runs-on: [self-hosted, "ManagedDevOps.Pool=${{ vars.MDP_POOL_NAME }}", "JobId=skipped-job-${{ github.run_id }}-${{ github.run_number }}-${{ github.run_attempt }}"]
     name: Skipped Job
     if: false
     steps:
@@ -117,7 +117,7 @@ jobs:
           echo "This step will never execute"
 
   summary:
-    runs-on: [self-hosted, "ManagedDevOps.Pool=${{ vars.MDP_POOL }}", "JobId=summary-job-${{ github.run_id }}-${{ github.run_number }}-${{ github.run_attempt }}"]
+    runs-on: [self-hosted, "ManagedDevOps.Pool=${{ vars.MDP_POOL_NAME }}", "JobId=summary-job-${{ github.run_id }}-${{ github.run_number }}-${{ github.run_attempt }}"]
     name: Summary
     needs: [quick-job, medium-job, long-job, parallel-jobs]
     steps:

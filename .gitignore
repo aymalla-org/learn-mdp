@@ -6,6 +6,16 @@ __pycache__/
 # C extensions
 *.so
 
+# Azure Developer CLI (azd)
+.azure/*
+!.azure/.env.template
+
+# Bicep compiled files
+# Generated ARM templates from Bicep files
+infra/**/*.json
+!infra/main.parameters.json
+!infra/main.parameters.azd.json
+
 # Distribution / packaging
 .Python
 build/

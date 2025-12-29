@@ -1,0 +1,16 @@
+name: learn-mdp
+metadata:
+  template: learn-mdp@0.0.1-beta
+hooks:
+  preprovision:
+    shell: sh
+    run: ./scripts/azd/preprovision.sh
+  postprovision:
+    shell: sh
+    run: ./scripts/azd/postprovision.sh
+  postdown:
+    shell: sh
+    run: ./scripts/azd/postdown.sh
+infra:
+  provider: bicep
+  path: infra

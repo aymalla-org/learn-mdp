@@ -1,0 +1,32 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "environmentName": {
+      "value": "${AZURE_ENV_NAME}"
+    },
+    "location": {
+      "value": "${AZURE_LOCATION}"
+    },
+    "organizationUrl": {
+      "value": "${GITHUB_ORG_URL}"
+    },
+    "repositories": {
+      "value": [
+        "${GITHUB_REPOSITORY_NAME}"
+      ]
+    },
+    "maximumConcurrency": {
+      "value": 1
+    },
+    "vmSize": {
+      "value": "Standard_B2s"
+    },
+    "imageName": {
+      "value": "ubuntu-24.04"
+    },
+    "devOpsInfrastructureObjectId": {
+      "value": "${DEVOPSINFRASTRUCTURE_PRINCIPLE_ID}"
+    }
+  }
+}

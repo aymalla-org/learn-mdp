@@ -1,4 +1,4 @@
-.PHONY: help trigger-mdp-test-workflows 
+.PHONY: help init validate build lint azd-up azd-down azd-deploy azd-provision azd-show clean trigger-test-workflow-batch
 
 
 # Load environment file if exists
@@ -14,13 +14,63 @@ endif
 
 # Load azd environment variables if azd is installed and initialized
 ifneq ($(shell command -v azd 2> /dev/null),)
-	AZD_VALUES := $(shell azd env get-values --output json | jq -r 'to_entries|map("\(.key)=\(.value)")|.[]')
-	$(foreach kv,$(AZD_VALUES),$(eval export $(kv)))
+AZD_VALUES := $(shell azd env get-values --output json | jq -r 'to_entries|map("\(.key)=\(.value)")|.[]')
+$(foreach kv,$(AZD_VALUES),$(eval export $(kv)))
 endif
 
 # Default target
 help: ## Show this help message
 	@grep -h -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
 
-trigger-mdp-test-workflows:
-	./scripts/mdp-run-workflow-batch.sh "mdp-test.yml" 50
+trigger-test-workflow-batch: ## Trigger MDP test workflows in batch
+	@echo "Triggering MDP test workflows in batch..."
+	./scripts/run-workflow-batch.sh "mdp-test.yml" 50
+
+init: ## Initialize Azure Developer CLI
+	@echo "Initializing Azure Developer CLI..."
+	azd init
+
+validate: ## Validate Bicep templates (packages and validates)
+	@echo "Validating Bicep templates..."
+	@echo "Building and validating Bicep templates using azd..."
+	azd package --all
+
+# Build Bicep to ARM JSON (packages templates)
+build:
+	@echo "Building Bicep templates..."
+	@echo "Packaging Bicep templates using azd..."
+	azd package --all
+
+lint: ## Lint Bicep templates (packages and lints)
+	@echo "Linting Bicep templates..."
+	@echo "Packaging and linting Bicep templates using azd..."
+	azd package --all
+
+azd-up: ## Deploy infrastructure using Azure Developer CLI
+	@echo "Provisioning resources and Deploying Application with Azure Developer CLI..."
+	azd up
+
+azd-down: ## Destroy infrastructure using Azure Developer CLI
+	@echo "WARNING: This will permanently delete all resources and purge soft-deleted items!"
+	@echo "Deleting infrastructure with Azure Developer CLI..."
+	azd down --force --purge
+
+azd-deploy: ## Deploy using Azure Developer CLI
+	@echo "Deploying with Azure Developer CLI..."
+	azd deploy
+
+azd-provision: ## Provision resources using Azure Developer CLI
+	@echo "Provisioning resources with Azure Developer CLI..."
+	azd provision
+
+azd-show: ## Show deployment outputs
+	@echo "Environment values:"
+	azd env get-values
+	@echo ""
+	@echo "Deployment details:"
+	azd show
+
+clean: ## Clean generated ARM JSON files
+	@echo "Cleaning generated ARM JSON files..."
+	@rm -f infra/main.json infra/modules/*.json
+	@echo "Clean complete!"
