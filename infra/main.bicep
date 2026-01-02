@@ -78,7 +78,7 @@ module managedPool 'modules/managedPool.bicep' = {
     poolName: 'mdp-pool-${deploymentUniqueId}'
     location: location
     devCenterProjectResourceId: devCenter.outputs.projectId
-    //subnetId: vnet.outputs.subnetId
+    subnetId: vnet.outputs.subnetId
     organizationUrl: organizationUrl
     repositories: repositories
     maximumConcurrency: poolMaximumSize
