@@ -12,10 +12,13 @@ ifeq ($(filter $(MAKECMDGOALS),config clean),)
 	endif
 endif
 
-# Load azd environment variables if azd is installed and initialized
+# Load azd environment variables if azd is installed and an environment is configured
 ifneq ($(shell command -v azd 2> /dev/null),)
-AZD_VALUES := $(shell azd env get-values --output json | jq -r 'to_entries|map("\(.key)=\(.value)")|.[]')
-$(foreach kv,$(AZD_VALUES),$(eval export $(kv)))
+	AZD_ENV_JSON := $(shell azd env get-values --output json 2>/dev/null || true)
+	ifneq ($(strip $(AZD_ENV_JSON)),)
+		AZD_VALUES := $(shell printf '%s\n' '$(AZD_ENV_JSON)' | jq -r 'to_entries|map("\(.key)=\(.value)")|.[]')
+		$(foreach kv,$(AZD_VALUES),$(eval export $(kv)))
+	endif
 endif
 
 # Default target
@@ -25,6 +28,12 @@ help: ## Show this help message
 trigger-workflow-batch: ## Trigger MDP test workflows in batch
 	@echo "Triggering MDP test workflows in batch..."
 	./scripts/run-workflow-batch.sh "mdp-test.yml" 100
+
+cancel-queued-workflows: ## Cancel MDP test workflows in batch
+	@echo "Cancelling MDP test workflows in batch..."
+	gh run list --limit 1000 --json databaseId,status,name,workflowName \
+	  -q '.[] | select(.status=="queued") | .databaseId' \
+	  | xargs -r -n1 gh run cancel
 
 init: ## Initialize Azure Developer CLI
 	@echo "Initializing Azure Developer CLI..."

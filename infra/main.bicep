@@ -10,15 +10,6 @@ param environmentName string
 @description('Primary location for all resources')
 param location string
 
-@description('The name of the Dev Center')
-param devCenterName string = '${environmentName}-mdp-devcenter'
-
-@description('The name of the Virtual Network')
-param vnetName string = '${environmentName}-mdp-vnet'
-
-@description('The name of the Managed DevOps Pool')
-param poolName string = '${environmentName}-mdp-pool'
-
 @description('The Azure DevOps organization name')
 @minLength(1)
 param organizationUrl string
@@ -29,9 +20,6 @@ param repositories array
 
 @description('The virtual network address prefix')
 param vnetAddressPrefix string
-
-@description('The subnet name')
-param subnetName string = 'snet-managed-pool'
 
 @description('The subnet address prefix')
 param subnetAddressPrefix string
@@ -49,19 +37,22 @@ param imageName string
 @description('DevOps Infrastructure Service Principal Object ID')
 param devOpsInfrastructureObjectId string
 
+var deploymentUniqueId = toLower(uniqueString(subscription().id, environmentName, location))
+
 var tags = {
   'azd-env-name': environmentName
   environment: environmentName
   managedBy: 'Bicep'
   purpose: 'ManagedDevOpsPool'
+  deploymentUniqueId: deploymentUniqueId
 }
 
 // Deploy Virtual Network
 module vnet 'modules/vnet.bicep' = {
   name: 'vnet-deployment'
   params: {
-    vnetName: vnetName
-    subnetName: subnetName
+    vnetName: 'mdp-vnet-${deploymentUniqueId}'
+    subnetName: 'mdp-snet-${deploymentUniqueId}'
     location: location
     addressPrefix: vnetAddressPrefix
     subnetPrefix: subnetAddressPrefix
@@ -74,7 +65,7 @@ module vnet 'modules/vnet.bicep' = {
 module devCenter 'modules/devCenter.bicep' = {
   name: 'devcenter-deployment'
   params: {
-    devCenterName: devCenterName
+    devCenterName: 'mdp-dc-${deploymentUniqueId}'
     location: location
     tags: tags
   }
@@ -84,10 +75,10 @@ module devCenter 'modules/devCenter.bicep' = {
 module managedPool 'modules/managedPool.bicep' = {
   name: 'managedpool-deployment'
   params: {
-    poolName: poolName
+    poolName: 'mdp-pool-${deploymentUniqueId}'
     location: location
     devCenterProjectResourceId: devCenter.outputs.projectId
-    subnetId: vnet.outputs.subnetId
+    //subnetId: vnet.outputs.subnetId
     organizationUrl: organizationUrl
     repositories: repositories
     maximumConcurrency: poolMaximumSize
@@ -98,12 +89,12 @@ module managedPool 'modules/managedPool.bicep' = {
 }
 
 // Outputs
-output devCenterId string = devCenter.outputs.devCenterId
-output devCenterName string = devCenter.outputs.devCenterName
-output devCenterProjectId string = devCenter.outputs.projectId
-output devCenterProjectName string = devCenter.outputs.projectName
-output vnetId string = vnet.outputs.vnetId
-output vnetName string = vnet.outputs.vnetName
-output subnetId string = vnet.outputs.subnetId
-output poolId string = managedPool.outputs.poolId
-output poolName string = managedPool.outputs.poolName
+output DEVCENTER_ID string = devCenter.outputs.devCenterId
+output DEVCENTER_NAME string = devCenter.outputs.devCenterName
+output DEVCENTER_PROJECT_ID string = devCenter.outputs.projectId
+output DEVCENTER_PROJECT_NAME string = devCenter.outputs.projectName
+output VNET_ID string = vnet.outputs.vnetId
+output VNET_NAME string = vnet.outputs.vnetName
+output SUBNET_ID string = vnet.outputs.subnetId
+output MDP_POOL_ID string = managedPool.outputs.poolId
+output MDP_POOL_NAME string = managedPool.outputs.poolName

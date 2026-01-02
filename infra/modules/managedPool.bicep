@@ -9,7 +9,7 @@ param location string = resourceGroup().location
 param devCenterProjectResourceId string
 
 @description('The subnet resource ID for the pool')
-param subnetId string
+param subnetId string?
 
 @description('The maximum number of agents in the pool')
 @minValue(1)
@@ -36,11 +36,12 @@ param resourcePredictions object?
 
 @description('Resource predictions profile for the pool agents (optional)')
 param resourcePredictionsProfile object = {
-  predictionPreference: 'Balanced'
+  predictionPreference: 'MoreCostEffective' // Options: 'Balanced', 'BestPerformance', 'MoreCostEffective', 'MorePerformance', 'MostCostEffective'
   kind: 'Automatic'
 }
 
-resource managedPool 'Microsoft.DevOpsInfrastructure/pools@2024-04-04-preview' = {
+// Documentation: https://learn.microsoft.com/en-us/azure/templates/microsoft.devopsinfrastructure/2025-09-20/pools?pivots=deployment-language-arm-template
+resource managedPool 'Microsoft.DevOpsInfrastructure/pools@2025-09-20' = {
   name: poolName
   location: location
   tags: tags
