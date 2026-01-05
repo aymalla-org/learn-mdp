@@ -8,7 +8,7 @@ Based on my investigation, the issue appears to be caused by high concurrency le
 
 - An Azure subscription
 - Azure Managed DevOps Pools subscription prerequisites (see [Azure Managed DevOps Pools documentation](https://learn.microsoft.com/en-us/azure/devops/managed-devops-pools/prerequisites?view=azure-devops&tabs=azure-portal))
-- GitHub organization with Azure Devops application installed
+- GitHub organization with `Managed DevOps Pools application` installed
 - Fork of this repository in your GitHub organization
 
 #### Tools

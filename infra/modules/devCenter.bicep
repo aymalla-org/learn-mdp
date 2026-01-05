@@ -14,16 +14,5 @@ resource devCenter 'Microsoft.DevCenter/devcenters@2023-04-01' = {
   tags: tags
 }
 
-resource devCenterProject 'Microsoft.DevCenter/projects@2023-04-01' = {
-  name: '${devCenterName}-project'
-  location: location
-  tags: tags
-  properties: {
-    devCenterId: devCenter.id
-  }
-}
-
 output devCenterId string = devCenter.id
 output devCenterName string = devCenter.name
-output projectId string = devCenterProject.id
-output projectName string = devCenterProject.name

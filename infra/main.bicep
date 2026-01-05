@@ -49,7 +49,7 @@ var tags = {
 
 // Deploy Virtual Network
 module vnet 'modules/vnet.bicep' = {
-  name: 'vnet-deployment'
+  name: 'vnet-deployment-${deploymentUniqueId}'
   params: {
     vnetName: 'mdp-vnet-${deploymentUniqueId}'
     subnetName: 'mdp-snet-${deploymentUniqueId}'
@@ -63,7 +63,7 @@ module vnet 'modules/vnet.bicep' = {
 
 // Deploy Dev Center
 module devCenter 'modules/devCenter.bicep' = {
-  name: 'devcenter-deployment'
+  name: 'devcenter-deployment-${deploymentUniqueId}'
   params: {
     devCenterName: 'mdp-dc-${deploymentUniqueId}'
     location: location
@@ -71,13 +71,24 @@ module devCenter 'modules/devCenter.bicep' = {
   }
 }
 
+// Deploy Dev Center Project
+module devCenterProject 'modules/devCenterProject.bicep' = {
+  name: 'devcenterproject-deployment-${deploymentUniqueId}'
+  params: {
+    devCenterProjectName: 'mdp-dcproj-${deploymentUniqueId}'
+    devCenterId: devCenter.outputs.devCenterId
+    location: location
+    tags: tags
+  }
+}
+
 // Deploy Managed DevOps Pool
 module managedPool 'modules/managedPool.bicep' = {
-  name: 'managedpool-deployment'
+  name: 'managedpool-deployment-${deploymentUniqueId}'
   params: {
     poolName: 'mdp-pool-${deploymentUniqueId}'
     location: location
-    devCenterProjectResourceId: devCenter.outputs.projectId
+    devCenterProjectResourceId: devCenterProject.outputs.projectId
     subnetId: vnet.outputs.subnetId
     organizationUrl: organizationUrl
     repositories: repositories
@@ -91,8 +102,8 @@ module managedPool 'modules/managedPool.bicep' = {
 // Outputs
 output DEVCENTER_ID string = devCenter.outputs.devCenterId
 output DEVCENTER_NAME string = devCenter.outputs.devCenterName
-output DEVCENTER_PROJECT_ID string = devCenter.outputs.projectId
-output DEVCENTER_PROJECT_NAME string = devCenter.outputs.projectName
+output DEVCENTER_PROJECT_ID string = devCenterProject.outputs.projectId
+output DEVCENTER_PROJECT_NAME string = devCenterProject.outputs.projectName
 output VNET_ID string = vnet.outputs.vnetId
 output VNET_NAME string = vnet.outputs.vnetName
 output SUBNET_ID string = vnet.outputs.subnetId

@@ -23,7 +23,7 @@
       "value": "10.0.0.0/24"
     },
     "poolMaximumSize": {
-      "value": 10
+      "value": 20
     },
     "vmSize": {
       "value": "Standard_D4ads_v5"
