@@ -1,7 +1,6 @@
 # Test workflow to generate telemetry events with varying durations
 # This workflow is designed to test the telemetry capture system
 name: mdp-test-telemetry
-run-name: mdp-test-telemetry-${{ github.run_id }}-${{ github.run_number }}-${{ github.run_attempt }}
 on:
   pull_request:
   merge_group:
