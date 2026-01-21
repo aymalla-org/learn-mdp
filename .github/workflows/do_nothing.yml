@@ -1,0 +1,20 @@
+name: Do Nothing
+
+on:
+  workflow_call:
+    inputs:
+      name:
+        description: "Name of the component"
+        required: true
+        type: string
+        default: "Nothing"
+      calculation:
+        description: "Results of the Calculation job"
+        required: false
+        type: string
+jobs:
+  build:
+    runs-on: ["self-hosted", "ManagedDevOps.Pool=${{ vars.MDP_POOL_NAME }}", "JobId=build-${{ inputs.name }}-${{ github.run_id }}-${{ github.run_number }}-${{ github.run_attempt }}"]
+    steps:
+      - name: Nothing
+        run: echo "nothing"
