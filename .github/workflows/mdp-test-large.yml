@@ -1,5 +1,4 @@
-name: gnb-ci
-run-name: gnb-ci-${{ github.event_name }}-${{ github.ref }}
+name: mdp-test-large-workflow
 on:
   workflow_dispatch:
 
@@ -7,12 +6,7 @@ on:
 jobs:
   Job1:
     name: Job1
-    runs-on:
-      [
-        "self-hosted",
-        "ManagedDevOps.Pool=${{ vars.MDP_POOL_NAME}}",
-        "JobId=calc-${{ github.run_id }}-${{ github.run_number }}-${{ github.run_attempt }}",
-      ]
+    runs-on: [ "self-hosted", "ManagedDevOps.Pool=${{ vars.MDP_POOL_NAME}}", "JobId=calc-${{ github.run_id }}-${{ github.run_number }}-${{ github.run_attempt }}"]
     outputs:
       jobs: ${{ steps.calulate.outputs.jobs }}
     steps:
