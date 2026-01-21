@@ -2,8 +2,6 @@
 # This workflow is designed to test the telemetry capture system
 name: mdp-test-telemetry
 on:
-  pull_request:
-  merge_group:
   workflow_dispatch:
     inputs:
       duration_seconds:
