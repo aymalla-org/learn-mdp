@@ -1,0 +1,27 @@
+# This workflow is designed to reproduce job stuck issue in MDP self-hosted runners.
+name: mdp-test-job-stuck
+on:
+  workflow_dispatch:
+    inputs:
+      duration_seconds:
+        description: "Duration to sleep (in seconds)"
+        required: false
+        default: "10"
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  quick-job:
+    runs-on: [self-hosted, "ManagedDevOps.Pool=${{ vars.MDP_POOL_NAME }}", "JobId=quick-job-${{ github.run_id }}-${{ github.run_number }}-${{ github.run_attempt }}"]
+    name: Quick Job (~5s)
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Quick step
+        run: |
+          echo "Starting quick job..."
+          sleep 2
+          echo "Quick job completed!"

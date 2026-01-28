@@ -33,6 +33,16 @@ trigger-batch-of-large-workflow: ## Trigger MDP test large workflows in batch
 	@echo "Triggering MDP test large workflows in batch..."
 	./scripts/run-workflow-batch.sh "mdp-test-large.yml" 10
 
+reproduce-agent-stuck: ## Reproduce MDP agent stuck issue
+	@echo "Triggering MDP test agent stuck workflows in batch..."
+	./scripts/run-workflow-batch.sh "mdp-test.yml" 100 & ./scripts/run-workflow-batch.sh "mdp-test.yml" 100
+
+reproduce-job-stuck: ## Reproduce MDP job stuck issue
+	@echo "Triggering MDP test job stuck workflows in batch..."
+	./scripts/run-workflow-batch.sh "mdp-test-job-stuck.yml" 1 && \
+	sleep 5 && \
+	./scripts/run-workflow-batch.sh "mdp-test-job-stuck.yml" 1
+
 cancel-queued-workflows: ## Cancel MDP test workflows in batch
 	@echo "Cancelling MDP test workflows in batch..."
 	gh run list --limit 1000 --json databaseId,status,name,workflowName \
