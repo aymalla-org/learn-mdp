@@ -14,12 +14,7 @@ on:
         type: string
 jobs:
   build:
-    runs-on:
-      [
-        "self-hosted",
-        "ManagedDevOps.Pool=${{ vars.MDP_POOL_NAME }}",
-        "JobId=build-${{ inputs.name }}-${{ github.run_id }}-${{ github.run_number }}-${{ github.run_attempt }}",
-      ]
+    runs-on: ["${{ vars.MDP_POOL_NAME }}"]
     steps:
       - name: Nothing
         run: echo "nothing" && sleep 10

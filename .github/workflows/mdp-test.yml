@@ -10,7 +10,7 @@ on:
 
 jobs:
   quick-job:
-    runs-on: [self-hosted, "ManagedDevOps.Pool=${{ vars.MDP_POOL_NAME }}", "JobId=quick-job-${{ github.run_id }}-${{ github.run_number }}-${{ github.run_attempt }}"]
+    runs-on: ["${{ vars.MDP_POOL_NAME }}"]
     name: Quick Job (~5s)
     steps:
       - name: Checkout

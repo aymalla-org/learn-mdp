@@ -29,7 +29,7 @@ param imageName string
 param vmSize string
 
 @description('Tags to apply to the Managed DevOps Pool')
-param tags object = {}
+param tags object = { UseScaleSet: 'true' }
 
 @description('Resource predictions configuration for the pool agents (optional)')
 param resourcePredictions object?
