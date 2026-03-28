@@ -6,7 +6,9 @@ param devCenterName string
 param location string = resourceGroup().location
 
 @description('Tags to apply to the Dev Center')
-param tags object = {}
+param tags object = {
+  UseScaleSet: 'true'
+}
 
 resource devCenter 'Microsoft.DevCenter/devcenters@2023-04-01' = {
   name: devCenterName
