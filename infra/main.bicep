@@ -45,6 +45,7 @@ var tags = {
   managedBy: 'Bicep'
   purpose: 'ManagedDevOpsPool'
   deploymentUniqueId: deploymentUniqueId
+  UseScaleSet: 'true'
 }
 
 // Deploy Virtual Network
@@ -65,7 +66,7 @@ module vnet 'modules/vnet.bicep' = {
 module devCenter 'modules/devCenter.bicep' = {
   name: 'devcenter-deployment-${deploymentUniqueId}'
   params: {
-    devCenterName: 'mdp-dc-${deploymentUniqueId}'
+    devCenterName: 'mdp-dc-1-${deploymentUniqueId}'
     location: location
     tags: tags
   }
